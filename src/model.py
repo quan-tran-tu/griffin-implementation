@@ -15,7 +15,7 @@ class OutputHead(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.layer_norm(x)
         x = self.linear_layer(x)
-        return F.softmax(x, dim=-1)
+        return x
 
 class LanguageModel(nn.Module):
     def __init__(self, config):
@@ -41,7 +41,7 @@ class LanguageModel(nn.Module):
         
         for layer in self.layers:
             x = layer(x)
-        logits = self.lm_head(x) # note: using list [-1] to preserve the time dim
+        logits = self.out(x) # note: using list [-1] to preserve the time dim
         return logits
 
 class RecurrentBlock(nn.Module):
